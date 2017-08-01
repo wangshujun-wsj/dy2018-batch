@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>批量下载</title>
+    <!-- <script src="http://pstatic.xunlei.com/js/base64.js"></script>
+    <script src="http://pstatic.xunlei.com/js/thunderBatch.js"></script> -->
+
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <style>
+        body {
+            margin: 0 auto;
+            padding-top: 50px;
+            width: 600px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1><a target="_blank" href="http://www.dy2018.com/">http://www.dy2018.com/</a> </h1>
+    <h1><a target="_blank" href="http://www.dytt8.net">http://www.dytt8.net/</a> </h1>
+    <div class="input-group">
+      <input type="text" id="url" value="http://www.dytt8.net/html/tv/oumeitv/20170717/54531.html" class="form-control" placeholder="请输入影片地址">
+      <span class="input-group-btn">
+        <button onclick="getData()" class="btn btn-default" type="button">批量下载</button>
+      </span>
+    </div>
+    <div class="jumbotron">
+        <h2></h2>
+        <h3></h3>
+        <div id="thunderBatch">
+
+        </div>
+        <div id="img" style="display:none;">
+            <img src="/img/group.png" alt="设置迅雷多个单文件下载" title="设置迅雷多个单文件下载">
+            <img src="/img/single.png" alt="多个单文件下载" title="多个单文件下载">
+        </div>
+    <div>
+    
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/thunderBatch.js"></script>
+    <script src="js/base64.js"></script>
+
+    <script>
+        function getData() {
+            var url = $("#url").val(); //获取
+            $.post("/upload", { url: url }, function (result) {
+                if(result === '-1') {
+                    alert('服务器解析页面失败!');
+                    return;
+                }
+                try {
+                    var pid = ""; //迅雷联盟合作号，没有可以随便填
+                    BatchTasker.BeginBatch();    //开始批量添加
+                    var text = '';
+                    for (let i = 0; i < result.length; i++) {
+                        text += result[i]+"</br>";
+                        BatchTasker.AddTask(ThunderEncode(result[i]));
+                    }
+                    $('#thunderBatch').html(text);
+                    BatchTasker.EndBatch();    //结束添加，开始下载
+                    $('h2').text('第二种方式:  复制到迅雷下载,批量下载默认下载为视频组');
+                    $('h3').text('视频组不全部下载完成不能观看');
+                    $('#img').show();
+                } catch (error) {
+                    alert("请使用IE内核浏览器! 或者复制地址到迅雷下载!");
+                }
+                
+            });
+        }
+    </script>
+</body>
+
+</html>
